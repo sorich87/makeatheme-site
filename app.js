@@ -9,7 +9,7 @@ app = http.createServer(function(req, res) {
   function error(err) {
     function showError(err, req, res) {
       res.statusCode = err.status || 500;
-      res.end(err.message);
+      console.log(err.message);
     }
 
     if (process.env.RATCHET_TOKEN) {
