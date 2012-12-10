@@ -1,13 +1,23 @@
 var http = require('http')
   , url = require('url')
   , send = require('send')
+  , ratchet = require('ratchetio')
   , app;
 
 app = http.createServer(function(req, res) {
   // error-handling
   function error(err) {
-    res.statusCode = err.status || 500;
-    res.end(err.message);
+    function showError(err, req, res) {
+      res.statusCode = err.status || 500;
+      res.end(err.message);
+    }
+
+    if (process.env.RATCHET_TOKEN) {
+      var errorHandler = ratchet.errorHandler(process.env.RATCHET_TOKEN);
+      errorHandler(err, req, res, showError);
+    } else {
+      showError(err, req, res);
+    }
   }
 
   // directory handling
